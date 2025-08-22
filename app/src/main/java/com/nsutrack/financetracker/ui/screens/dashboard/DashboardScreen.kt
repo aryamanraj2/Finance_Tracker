@@ -19,6 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Canvas
+import androidx.compose.material.icons.filled.ArrowUpward
+import com.nsutrack.financetracker.ui.theme.outfit
+import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
 
 @Composable
 fun DashboardScreen() {
@@ -133,24 +137,8 @@ fun CardsSection() {
         .fillMaxWidth()
         .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
         // Spent this week card
-        Card(
-            modifier = Modifier
-                .weight(1f)
-                .height(180.dp),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Spent this week", color = Color.Gray)
-                Text(
-                    text = "$6 426.94",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("3% higher", color = Color.Gray)
-            }
+        Box(modifier = Modifier.weight(1f)) {
+            SpentThisWeekCard()
         }
         Spacer(modifier = Modifier.width(16.dp))
         // Subscription card
@@ -184,6 +172,7 @@ fun CardsSection() {
         }
     }
 }
+
 
 @Composable
 fun OperationsSection() {

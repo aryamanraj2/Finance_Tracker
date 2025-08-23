@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Canvas
 import androidx.compose.material.icons.filled.ArrowUpward
 import com.nsutrack.financetracker.ui.theme.outfit
+import com.nsutrack.financetracker.ui.components.OperationCard
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
 
 @Composable
@@ -40,7 +41,7 @@ fun DashboardScreen() {
             Spacer(modifier = Modifier.height(24.dp))
             CardsSection()
             Spacer(modifier = Modifier.height(24.dp))
-            OperationsSection()
+            OperationCard()
         }
     }
 }
@@ -174,67 +175,6 @@ fun CardsSection() {
 }
 
 
-@Composable
-fun OperationsSection() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Operation", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Text("Last week", color = Color.Gray)
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "$1 030.20",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text("Spent this day", color = Color.Gray)
-            Spacer(modifier = Modifier.height(16.dp))
-            // Placeholder for progress bar
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(12.dp)
-                    .background(Color.Gray, shape = RoundedCornerShape(6.dp))
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color.Gray)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text("Sean Kim", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Transfer", color = Color.Gray)
-                    }
-                }
-                Column(horizontalAlignment = Alignment.End) {
-                    Text("-$320.00", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text("5.28 AM", color = Color.Gray)
-                }
-            }
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

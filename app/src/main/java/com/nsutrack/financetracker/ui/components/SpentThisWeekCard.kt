@@ -1,19 +1,19 @@
 package com.nsutrack.financetracker.ui.components
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -33,85 +33,62 @@ import com.nsutrack.financetracker.ui.theme.outfit
 @Composable
 fun SpentThisWeekCard() {
     Card(
-        modifier = Modifier
-            .height(180.dp),
+        modifier = Modifier,
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE5FF7F)),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                modifier = Modifier.align(Alignment.TopStart)
+                modifier = Modifier
+                    .padding(16.dp)
             ) {
                 Text(
                     text = "Spent this week",
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = Color.Black.copy(alpha = 0.7f),
                     fontFamily = outfit,
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp
                 )
                 Text(
-                    text = "$6 426.94",
+                    text = "₹6,426.94",
                     fontSize = 32.sp,
                     fontFamily = outfit,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Filled.ArrowUpward,
                         contentDescription = "Higher",
-                        tint = Color.White.copy(alpha = 0.7f),
+                        tint = Color.Black.copy(alpha = 0.7f),
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "3% higher",
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = Color.Black.copy(alpha = 0.7f),
                         fontFamily = outfit,
                         fontWeight = FontWeight.Medium,
                         fontSize = 13.sp
                     )
                 }
             }
-            PieChart(modifier = Modifier.align(Alignment.BottomEnd))
+            Icon(
+                imageVector = Icons.Outlined.BarChart,
+                contentDescription = "Graph",
+                tint = Color.Black.copy(alpha = 0.1f),
+                modifier = Modifier
+                    .size(84.dp)
+                    .align(Alignment.BottomStart)
+                    .offset(x = (-16).dp, y = 16.dp)
+            )
         }
     }
 }
 
-@Composable
-fun PieChart(modifier: Modifier = Modifier) {
-    Canvas(modifier = modifier.size(48.dp)) {
-        drawArc(
-            color = Color.Gray,
-            startAngle = 0f,
-            sweepAngle = 120f,
-            useCenter = true
-        )
-        drawArc(
-            color = Color.DarkGray,
-            startAngle = 120f,
-            sweepAngle = 90f,
-            useCenter = true
-        )
-        drawArc(
-            color = Color.LightGray,
-            startAngle = 210f,
-            sweepAngle = 90f,
-            useCenter = true
-        )
-        drawArc(
-            color = Color.Black,
-            startAngle = 300f,
-            sweepAngle = 60f,
-            useCenter = true
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

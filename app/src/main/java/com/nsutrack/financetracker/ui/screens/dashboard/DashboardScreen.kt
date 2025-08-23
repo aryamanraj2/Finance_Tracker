@@ -22,11 +22,27 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Canvas
 import androidx.compose.material.icons.filled.ArrowUpward
 import com.nsutrack.financetracker.ui.theme.outfit
-import com.nsutrack.financetracker.ui.components.OperationCard
+import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
+import com.nsutrack.financetracker.ui.components.Operation
 
 @Composable
 fun DashboardScreen() {
+    val operations = listOf(
+        Operation("Sean Kim", "Transfer", -320.00, "5.28 AM"),
+        Operation("Apple Store", "Macbook Pro", -2320.00, "3.15 PM"),
+        Operation("Netflix", "Subscription", -15.00, "8.30 AM"),
+        Operation("Amazon", "Shopping", -120.00, "1.00 PM"),
+        Operation("Starbucks", "Coffee", -5.00, "9.00 AM")
+    )
+
+    val top3Operations = operations.sortedBy { it.amount }.take(3)
+    val operationColors = mapOf(
+        top3Operations.getOrNull(0) to Color(0xFFE5DD00),
+        top3Operations.getOrNull(1) to Color(0xFF82D85B),
+        top3Operations.getOrNull(2) to Color.White
+    )
+
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -41,7 +57,7 @@ fun DashboardScreen() {
             Spacer(modifier = Modifier.height(24.dp))
             CardsSection()
             Spacer(modifier = Modifier.height(24.dp))
-            OperationCard()
+            OperationsList(operations = operations, operationColors = operationColors)
         }
     }
 }

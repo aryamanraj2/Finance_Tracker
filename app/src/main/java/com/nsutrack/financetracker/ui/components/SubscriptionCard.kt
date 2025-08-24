@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -30,9 +32,11 @@ fun SubscriptionCard(modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
     ) {
         Column(
-            modifier = Modifier.padding(16.dp).fillMaxHeight(),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
@@ -43,10 +47,10 @@ fun SubscriptionCard(modifier: Modifier = Modifier) {
             ) {
                 // Placeholder for Dribbble icon
             }
-            Column {
-                Text("Subscription", fontWeight = FontWeight.Bold, color = Color.White)
-                Text("Dribbble", color = Color.Gray)
-            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("Subscription", fontWeight = FontWeight.Bold, color = Color.White)
+            Text("Dribbble", color = Color.Gray)
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "$8.00",
                 fontWeight = FontWeight.Bold,

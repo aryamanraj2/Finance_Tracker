@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.ArrowUpward
 import com.nsutrack.financetracker.ui.theme.outfit
 import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
+import com.nsutrack.financetracker.ui.components.GetInsightsButton
 import com.nsutrack.financetracker.ui.components.Operation
 
 @Composable
@@ -150,42 +151,57 @@ fun TotalBalance() {
 
 @Composable
 fun CardsSection() {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-        // Spent this week card
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .height(IntrinsicSize.Min),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         Box(modifier = Modifier.weight(1f)) {
             SpentThisWeekCard()
         }
-        Spacer(modifier = Modifier.width(16.dp))
-        // Subscription card
-        Card(
-            modifier = Modifier
-                .weight(1f)
-                .height(180.dp),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    // Placeholder for Dribbble icon
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                            .background(Color.White),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Placeholder for Dribbble icon
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Subscription", fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("Dribbble", color = Color.Gray)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "$8.00",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 20.sp
+                    )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Subscription", fontWeight = FontWeight.Bold, color = Color.White)
-                Text("Dribbble", color = Color.Gray)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("$8.00", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 20.sp)
             }
+            GetInsightsButton(
+                onClick = {},
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -33,12 +34,14 @@ import com.nsutrack.financetracker.ui.theme.outfit
 @Composable
 fun SpentThisWeekCard() {
     Card(
-        modifier = Modifier,
+        modifier = Modifier.fillMaxHeight(),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE5FF7F)),
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
             Column(
                 modifier = Modifier
@@ -81,9 +84,9 @@ fun SpentThisWeekCard() {
                 contentDescription = "Graph",
                 tint = Color.Black.copy(alpha = 0.1f),
                 modifier = Modifier
-                    .size(84.dp)
-                    .align(Alignment.BottomStart)
-                    .offset(x = (-16).dp, y = 16.dp)
+                    .size(120.dp)
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 16.dp, y = 32.dp)
             )
         }
     }

@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -77,12 +79,18 @@ fun TopAppBar() {
             .fillMaxWidth()
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 16.dp),
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Default.AccountCircle,
+            imageVector = Icons.Rounded.AccountCircle,
             contentDescription = "Profile",
+            modifier = Modifier.size(40.dp),
+            tint = Color.White
+        )
+        Icon(
+            imageVector = Icons.Rounded.Settings,
+            contentDescription = "Settings",
             modifier = Modifier.size(40.dp),
             tint = Color.White
         )

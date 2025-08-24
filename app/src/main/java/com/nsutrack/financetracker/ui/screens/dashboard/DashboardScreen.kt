@@ -28,6 +28,7 @@ import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
 import com.nsutrack.financetracker.ui.components.GetInsightsButton
 import com.nsutrack.financetracker.ui.components.Operation
+import com.nsutrack.financetracker.ui.components.SubscriptionCard
 
 @Composable
 fun DashboardScreen() {
@@ -168,39 +169,11 @@ fun CardsSection() {
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Card(
+            SubscriptionCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
-                            .background(Color.White),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        // Placeholder for Dribbble icon
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("Subscription", fontWeight = FontWeight.Bold, color = Color.White)
-                    Text("Dribbble", color = Color.Gray)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        "$8.00",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontSize = 20.sp
-                    )
-                }
-            }
+                    .weight(1f)
+            )
             GetInsightsButton(
                 onClick = {},
                 modifier = Modifier.fillMaxWidth()

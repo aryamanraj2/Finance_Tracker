@@ -3,6 +3,8 @@ package com.nsutrack.financetracker.ui.screens.dashboard
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,6 +53,7 @@ fun DashboardScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFF1C1C1E))
+                .verticalScroll(rememberScrollState())
         ) {
             TopAppBar()
             Spacer(modifier = Modifier.height(24.dp))

@@ -74,7 +74,7 @@ fun TopAppBar() {
             .fillMaxWidth()
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -83,29 +83,6 @@ fun TopAppBar() {
             modifier = Modifier.size(40.dp),
             tint = Color.White
         )
-        Row {
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(1.dp, Color.Gray)
-            ) {
-                Text("Wallets", color = Color.White)
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(1.dp, Color.Gray)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu",
-                    tint = Color.White
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Menu", color = Color.White)
-            }
-        }
     }
 }
 
@@ -126,23 +103,6 @@ fun TotalBalance() {
             fontWeight = FontWeight.ExtraBold
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Row {
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(1.dp, Color.Gray)
-            ) {
-                Text("**** 3911", color = Color.White)
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(1.dp, Color.Gray)
-            ) {
-                Text("**** C3e3", color = Color.White)
-            }
-        }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "18 360.22 usd",

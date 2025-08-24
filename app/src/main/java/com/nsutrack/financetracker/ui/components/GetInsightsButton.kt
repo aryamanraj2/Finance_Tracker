@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nsutrack.financetracker.R
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
+import com.nsutrack.financetracker.ui.theme.Yellow
 
 @Composable
 fun GetInsightsButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -20,8 +21,8 @@ fun GetInsightsButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-            contentColor = MaterialTheme.colorScheme.primary
+            containerColor = Yellow.copy(alpha = 0.1f),
+            contentColor = Yellow
         )
     ) {
         Icon(

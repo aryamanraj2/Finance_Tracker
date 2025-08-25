@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nsutrack.financetracker.ui.utils.formatCurrency
 
 @Composable
 fun SubscriptionCard(modifier: Modifier = Modifier) {
@@ -52,7 +53,7 @@ fun SubscriptionCard(modifier: Modifier = Modifier) {
             Text("Dribbble", color = Color.Gray)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                "$8.00",
+                formatCurrency(8.00),
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 20.sp

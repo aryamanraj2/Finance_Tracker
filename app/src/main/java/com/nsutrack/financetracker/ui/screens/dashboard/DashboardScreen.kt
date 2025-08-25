@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Canvas
 import androidx.compose.material.icons.filled.ArrowUpward
 import com.nsutrack.financetracker.ui.theme.outfit
+import com.nsutrack.financetracker.ui.utils.formatCurrency
 import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
 import com.nsutrack.financetracker.ui.components.GetInsightsButton
@@ -45,7 +46,6 @@ fun DashboardScreen() {
         Operation("Amazon", "Shopping", -120.00, "1.00 PM"),
         Operation("Starbucks", "Coffee", -5.00, "9.00 AM")
     )
-
     val top3Operations = operations.sortedBy { it.amount }.take(3)
     val operationColors = mapOf(
         top3Operations.getOrNull(0) to Color(0xFFE5DD00),
@@ -129,7 +129,7 @@ fun TotalBalance() {
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)) {
-                    append("₹18,360.22")
+                    append(formatCurrency(18360.22))
                 }
                 append(" ")
                 withStyle(style = SpanStyle(color = Color.Gray, fontSize = 32.sp, fontWeight = FontWeight.Normal)) {

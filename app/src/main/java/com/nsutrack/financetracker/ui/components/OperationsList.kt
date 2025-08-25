@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nsutrack.financetracker.ui.utils.formatCurrency
 
 data class Operation(
     val name: String,
@@ -57,7 +58,7 @@ fun OperationsList(operations: List<Operation>, operationColors: Map<Operation?,
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = String.format("$%.2f", totalSpent),
+                text = formatCurrency(totalSpent),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -107,7 +108,7 @@ fun OperationItem(operation: Operation, color: Color) {
             }
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(String.format("$%.2f", operation.amount), color = color, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(formatCurrency(operation.amount), color = color, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Text(operation.time, color = Color.Gray)
         }
     }

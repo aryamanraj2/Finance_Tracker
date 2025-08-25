@@ -1,23 +1,18 @@
 package com.nsutrack.financetracker.ui.screens.dashboard
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,9 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Canvas
-import androidx.compose.material.icons.filled.ArrowUpward
-import com.nsutrack.financetracker.ui.theme.outfit
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.draw.alpha
+import com.nsutrack.financetracker.ui.components.CollapsingHeader
 import com.nsutrack.financetracker.ui.utils.formatCurrency
 import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
@@ -52,18 +47,20 @@ fun DashboardScreen() {
         top3Operations.getOrNull(1) to Color(0xFF82D85B),
         top3Operations.getOrNull(2) to Color.White
     )
+    val scrollState = rememberScrollState()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1C1C1E))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF1C1C1E))
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
         ) {
-            TopAppBar()
-            Spacer(modifier = Modifier.height(24.dp))
+            // Spacer to push content below the initial header
+            Spacer(modifier = Modifier.height(88.dp)) // Approx height of TopAppBar
             TotalBalance()
             Spacer(modifier = Modifier.height(24.dp))
             CardsSection()
@@ -81,13 +78,20 @@ fun DashboardScreen() {
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
+
+        // Initial header with icons that fades out
+        val initialHeaderAlpha = animateFloatAsState(targetValue = if (scrollState.value > 150) 0f else 1f).value
+        DashboardHeaderIcons(modifier = Modifier.alpha(initialHeaderAlpha))
+
+        // Collapsing header that fades in
+        CollapsingHeader(scrollOffset = scrollState.value.toFloat())
     }
 }
 
 @Composable
-fun TopAppBar() {
+fun DashboardHeaderIcons(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 16.dp),

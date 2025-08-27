@@ -1,41 +1,29 @@
 package com.nsutrack.financetracker.ui.screens.dashboard
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Canvas
-import androidx.compose.material.icons.filled.ArrowUpward
-import com.nsutrack.financetracker.ui.theme.outfit
-import com.nsutrack.financetracker.ui.utils.formatCurrency
+import com.nsutrack.financetracker.ui.components.GetInsightsButton
+import com.nsutrack.financetracker.ui.components.IosInspiredHeader
+import com.nsutrack.financetracker.ui.components.Operation
 import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
-import com.nsutrack.financetracker.ui.components.GetInsightsButton
-import com.nsutrack.financetracker.ui.components.Operation
 import com.nsutrack.financetracker.ui.components.SubscriptionCard
+import com.nsutrack.financetracker.ui.utils.formatCurrency
 
 @Composable
 fun DashboardScreen() {
@@ -55,31 +43,31 @@ fun DashboardScreen() {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
+        color = Color(0xFF1C1C1E)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF1C1C1E))
-                .verticalScroll(rememberScrollState())
-        ) {
-            TopAppBar()
-            Spacer(modifier = Modifier.height(24.dp))
-            TotalBalance()
-            Spacer(modifier = Modifier.height(24.dp))
-            CardsSection()
-            Spacer(modifier = Modifier.height(24.dp))
-            OperationsList(operations = operations, operationColors = operationColors)
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = "Made with ♥ by aryaman",
-                color = Color.Gray,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+        IosInspiredHeader {
+            item {
+                Column {
+                    TopAppBar()
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TotalBalance()
+                    Spacer(modifier = Modifier.height(24.dp))
+                    CardsSection()
+                    Spacer(modifier = Modifier.height(24.dp))
+                    OperationsList(operations = operations, operationColors = operationColors)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "Made with ♥ by aryaman",
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
     }
 }
@@ -111,9 +99,11 @@ fun TopAppBar() {
 
 @Composable
 fun TotalBalance() {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
         Text(
             text = "All sources",
             color = Color.Gray,
@@ -168,8 +158,6 @@ fun CardsSection() {
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

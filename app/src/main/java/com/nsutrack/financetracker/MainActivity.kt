@@ -9,7 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.*
 import com.nsutrack.financetracker.ui.screens.dashboard.DashboardScreen
-import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
+import com.nsutrack.financetracker.ui.screens.intro.IntroScreen
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -18,19 +18,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var showOnboarding by remember { mutableStateOf(true) }
+            var showIntro by remember { mutableStateOf(true) }
 
             FinanceTrackerTheme {
                 AnimatedContent(
-                    targetState = showOnboarding,
+                    targetState = showIntro,
                     transitionSpec = {
                         slideInHorizontally(animationSpec = tween(500)) { fullWidth -> fullWidth }.togetherWith(
                             slideOutHorizontally(animationSpec = tween(500)) { fullWidth -> -fullWidth })
                     }
                 ) { show ->
                     if (show) {
-                        OnboardingScreen {
-                            showOnboarding = false
+                        IntroScreen {
+                            showIntro = false
                         }
                     } else {
                         DashboardScreen()

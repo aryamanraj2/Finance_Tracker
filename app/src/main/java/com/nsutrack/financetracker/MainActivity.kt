@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.*
 import com.nsutrack.financetracker.ui.screens.dashboard.DashboardScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
@@ -23,8 +24,8 @@ class MainActivity : ComponentActivity() {
                 AnimatedContent(
                     targetState = showOnboarding,
                     transitionSpec = {
-                        slideInHorizontally(animationSpec = tween(500)) { fullWidth -> fullWidth } with
-                                slideOutHorizontally(animationSpec = tween(500)) { fullWidth -> -fullWidth }
+                        slideInHorizontally(animationSpec = tween(500)) { fullWidth -> fullWidth }.togetherWith(
+                            slideOutHorizontally(animationSpec = tween(500)) { fullWidth -> -fullWidth })
                     }
                 ) { show ->
                     if (show) {

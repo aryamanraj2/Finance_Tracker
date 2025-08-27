@@ -28,8 +28,8 @@ import com.nsutrack.financetracker.ui.utils.formatCurrency
 @Composable
 fun DashboardScreen() {
     val operations = listOf(
-        Operation("Sean Kim", "Transfer", -320.00, "5.28 AM"),
-        Operation("Apple Store", "Macbook Pro", -2320.00, "3.15 PM"),
+        Operation("Kavyansh", "Transfer", -320.00, "5.28 AM"),
+        Operation("Zara", "Shirt", -2320.00, "3.15 PM"),
         Operation("Netflix", "Subscription", -15.00, "8.30 AM"),
         Operation("Amazon", "Shopping", -120.00, "1.00 PM"),
         Operation("Starbucks", "Coffee", -5.00, "9.00 AM")

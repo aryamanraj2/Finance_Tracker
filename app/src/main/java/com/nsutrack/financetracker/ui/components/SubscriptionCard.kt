@@ -50,10 +50,10 @@ fun SubscriptionCard(modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text("Subscription", fontWeight = FontWeight.Bold, color = Color.White)
-            Text("Dribbble", color = Color.Gray)
+            Text("Apple Music", color = Color.Gray)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                formatCurrency(8.00),
+                formatCurrency(69.00),
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 20.sp

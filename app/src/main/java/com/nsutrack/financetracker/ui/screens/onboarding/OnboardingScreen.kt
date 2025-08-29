@@ -39,8 +39,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,27 +86,7 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
 
 @Composable
 fun WelcomePage(onNext: () -> Unit) {
-    var visibleText by remember { mutableStateOf("") }
     val fullText = "This is where your financial troubles end"
-    var isTextAnimationRunning by remember { mutableStateOf(true) }
-
-    val infiniteTransition = rememberInfiniteTransition(label = "blinker")
-    val blinkerAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ), label = "blinker"
-    )
-
-    LaunchedEffect(Unit) {
-        fullText.forEachIndexed { index, _ ->
-            visibleText = fullText.substring(0, index + 1)
-            delay(50)
-        }
-        isTextAnimationRunning = false
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         GraphAnimation()
@@ -114,29 +98,14 @@ fun WelcomePage(onNext: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = visibleText,
-                color = Yellow,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = outfit,
-                textAlign = TextAlign.Center
-            )
-            if (isTextAnimationRunning) {
-                Text(
-                    text = "|",
-                    color = Yellow,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = outfit,
-                    modifier = Modifier.alpha(blinkerAlpha)
-                )
-            }
-        }
+        Text(
+            text = fullText,
+            color = Yellow,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = outfit,
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(64.dp))
         Button(
             onClick = onNext,
@@ -163,26 +132,8 @@ fun OnboardingScreenPreview() {
 
 @Composable
 fun AllowancePage(onNext: (Double) -> Unit) {
-    var visibleText by remember { mutableStateOf("") }
     val fullText = "What's your monthly allowance?"
     var allowance by remember { mutableStateOf("") }
-
-    val infiniteTransition = rememberInfiniteTransition(label = "blinker")
-    val blinkerAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ), label = "blinker"
-    )
-
-    LaunchedEffect(Unit) {
-        fullText.forEachIndexed { index, _ ->
-            visibleText = fullText.substring(0, index + 1)
-            delay(75)
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -191,32 +142,24 @@ fun AllowancePage(onNext: (Double) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = visibleText,
-                color = Yellow,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = outfit,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = "|",
-                color = Yellow,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = outfit,
-                modifier = Modifier.alpha(blinkerAlpha)
-            )
-        }
+        Text(
+            text = fullText,
+            color = Yellow,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = outfit,
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(64.dp))
         OutlinedTextField(
             value = allowance,
             onValueChange = { allowance = it },
-            label = { Text("Monthly Allowance (in Rupees)", fontFamily = outfit) },
+            label = { Text("Monthly Allowance", fontFamily = outfit) },
+            shape = RoundedCornerShape(12.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -238,13 +181,18 @@ fun AllowancePage(onNext: (Double) -> Unit) {
                     onNext(allowanceValue)
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Yellow),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Yellow,
+                disabledContainerColor = Color.DarkGray,
+                contentColor = Color.Black,
+                disabledContentColor = Color.Gray
+            ),
             modifier = Modifier.fillMaxWidth(0.8f),
             enabled = allowance.toDoubleOrNull() != null
         ) {
             Text(
                 text = "Next",
-                color = Color.Black,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = outfit

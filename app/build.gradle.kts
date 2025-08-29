@@ -59,4 +59,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.compose.icons.feather)
+    implementation(libs.play.services.auth)
 }

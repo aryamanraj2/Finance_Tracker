@@ -11,6 +11,7 @@ activity-compose = "1.9.1"
 compose-bom = "2024.09.00"
 kotlin-compose = "2.0.21"
 compose-icons = "1.1.0"
+play-services-auth = "21.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +31,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-icons-feather = { group = "br.com.devsrsouza.compose.icons", name = "feather", version.ref = "compose-icons" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

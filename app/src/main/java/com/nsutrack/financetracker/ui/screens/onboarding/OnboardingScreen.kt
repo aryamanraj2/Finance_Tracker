@@ -57,14 +57,13 @@ import com.nsutrack.financetracker.ui.utils.OnboardingManager
 import kotlinx.coroutines.delay
 
 sealed class Page {
-    object Welcome : Page()
     object Allowance : Page()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
-    var currentPage by remember { mutableStateOf<Page>(Page.Welcome) }
+    var currentPage by remember { mutableStateOf<Page>(Page.Allowance) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -73,7 +72,6 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
         val context = LocalContext.current
         AnimatedContent(targetState = currentPage) { page ->
             when (page) {
-                is Page.Welcome -> WelcomePage { currentPage = Page.Allowance }
                 is Page.Allowance -> AllowancePage { allowance ->
                     OnboardingManager.setMonthlyAllowance(context, allowance)
                     OnboardingManager.setOnboardingCompleted(context, true)
@@ -81,46 +79,6 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun WelcomePage(onNext: () -> Unit) {
-    val fullText = "This is where your financial troubles end"
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        GraphAnimation()
-    }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = fullText,
-            color = Yellow,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = outfit,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(64.dp))
-        Button(
-            onClick = onNext,
-            colors = ButtonDefaults.buttonColors(containerColor = Yellow),
-            modifier = Modifier.fillMaxWidth(0.8f)
-        ) {
-            Text(
-                text = "Let's get started",
-                color = Color.Black,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = outfit
-            )
-        }
-        Spacer(modifier = Modifier.height(64.dp))
     }
 }
 

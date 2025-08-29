@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nsutrack.financetracker.ui.theme.Yellow
 import com.nsutrack.financetracker.ui.theme.outfit
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
-fun AuthScreen(onGoogleSignIn: () -> Unit) {
+fun AuthScreen(onGoogleSignIn: () -> Unit, onSkip: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1C1C1E)
@@ -72,6 +73,23 @@ fun AuthScreen(onGoogleSignIn: () -> Unit) {
                     fontFamily = outfit
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = onSkip,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text(
+                    text = "Skip for now",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = outfit
+                )
+            }
         }
     }
 }
@@ -79,5 +97,5 @@ fun AuthScreen(onGoogleSignIn: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun AuthScreenPreview() {
-    AuthScreen {}
+    AuthScreen(onGoogleSignIn = {}, onSkip = {})
 }

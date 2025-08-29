@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Tasks
 import com.nsutrack.financetracker.ui.screens.auth.AuthScreen
 import com.nsutrack.financetracker.ui.screens.dashboard.DashboardScreen
 import com.nsutrack.financetracker.ui.screens.intro.IntroScreen
+import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingIntroScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
 import com.nsutrack.financetracker.ui.utils.GoogleAuthUiClient
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 
 sealed class Screen {
     object Intro : Screen()
+    object OnboardingIntro : Screen()
     object Auth : Screen()
     object Onboarding : Screen()
     object Dashboard : Screen()
@@ -72,19 +74,23 @@ class MainActivity : ComponentActivity() {
                 ) { screen ->
                     when (screen) {
                         is Screen.Intro -> IntroScreen {
+                            currentScreen = if (OnboardingManager.isOnboardingCompleted(context)) {
+                                Screen.Dashboard
+                            } else {
+                                Screen.OnboardingIntro
+                            }
+                        }
+                        is Screen.OnboardingIntro -> OnboardingIntroScreen {
                             currentScreen = if (googleAuthUiClient.getSignedInUser() != null) {
-                                if (OnboardingManager.isOnboardingCompleted(context)) {
-                                    Screen.Dashboard
-                                } else {
-                                    Screen.Onboarding
-                                }
+                                Screen.Onboarding
                             } else {
                                 Screen.Auth
                             }
                         }
-                        is Screen.Auth -> AuthScreen {
-                            launcher.launch(googleAuthUiClient.getSignInIntent())
-                        }
+                        is Screen.Auth -> AuthScreen(
+                            onGoogleSignIn = { launcher.launch(googleAuthUiClient.getSignInIntent()) },
+                            onSkip = { currentScreen = Screen.Onboarding }
+                        )
                         is Screen.Onboarding -> OnboardingScreen { currentScreen = Screen.Dashboard }
                         is Screen.Dashboard -> DashboardScreen()
                     }

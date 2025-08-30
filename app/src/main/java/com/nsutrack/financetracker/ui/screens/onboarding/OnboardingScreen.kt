@@ -58,6 +58,7 @@ import kotlinx.coroutines.delay
 
 sealed class Page {
     object Allowance : Page()
+    data class Spend(val monthlyAllowance: Double) : Page()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -73,7 +74,11 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
         AnimatedContent(targetState = currentPage) { page ->
             when (page) {
                 is Page.Allowance -> AllowancePage { allowance ->
-                    OnboardingManager.setMonthlyAllowance(context, allowance)
+                    currentPage = Page.Spend(allowance)
+                }
+                is Page.Spend -> SpendPage(monthlyAllowance = page.monthlyAllowance) { spend ->
+                    OnboardingManager.setMonthlyAllowance(context, page.monthlyAllowance)
+                    OnboardingManager.setMonthlySpend(context, spend)
                     OnboardingManager.setOnboardingCompleted(context, true)
                     onOnboardingFinished()
                 }

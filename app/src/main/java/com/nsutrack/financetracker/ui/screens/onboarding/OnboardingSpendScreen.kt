@@ -1,5 +1,10 @@
 package com.nsutrack.financetracker.ui.screens.onboarding
 
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,7 +38,15 @@ import com.nsutrack.financetracker.ui.theme.outfit
 @Composable
 fun SpendPage(monthlyAllowance: Double, onNext: (Double) -> Unit) {
     var spend by remember { mutableStateOf(0f) }
-    val haptic = LocalHapticFeedback.current
+    val context = LocalContext.current
+    val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val vibratorManager =
+            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        vibratorManager.defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
 
     Column(
         modifier = Modifier
@@ -56,7 +68,12 @@ fun SpendPage(monthlyAllowance: Double, onNext: (Double) -> Unit) {
             value = spend,
             onValueChange = {
                 spend = it
-                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE))
+                } else {
+                    @Suppress("DEPRECATION")
+                    vibrator.vibrate(20)
+                }
             },
             valueRange = 0f..monthlyAllowance.toFloat(),
             steps = 100,

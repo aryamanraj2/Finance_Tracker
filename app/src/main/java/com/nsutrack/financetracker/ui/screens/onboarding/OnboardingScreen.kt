@@ -59,6 +59,7 @@ import kotlinx.coroutines.delay
 sealed class Page {
     object Allowance : Page()
     data class Spend(val monthlyAllowance: Double) : Page()
+    data class Loading(val category: SavingsCategory) : Page()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -77,9 +78,19 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
                     currentPage = Page.Spend(allowance)
                 }
                 is Page.Spend -> SpendPage(monthlyAllowance = page.monthlyAllowance) { spend ->
+                    val savingsPercentage = (1 - spend / page.monthlyAllowance) * 100
+                    val category = when {
+                        savingsPercentage < 15 -> SavingsCategory.A
+                        savingsPercentage < 30 -> SavingsCategory.B
+                        savingsPercentage < 60 -> SavingsCategory.C
+                        else -> SavingsCategory.D
+                    }
                     OnboardingManager.setMonthlyAllowance(context, page.monthlyAllowance)
                     OnboardingManager.setMonthlySpend(context, spend)
                     OnboardingManager.setOnboardingCompleted(context, true)
+                    currentPage = Page.Loading(category)
+                }
+                is Page.Loading -> LoadingScreen(category = page.category) {
                     onOnboardingFinished()
                 }
             }

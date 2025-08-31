@@ -54,7 +54,7 @@ fun OperationsList(operations: List<Operation>, operationColors: Map<Operation?,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Operation", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Text("Transactions", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(

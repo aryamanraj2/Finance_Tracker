@@ -110,7 +110,7 @@ fun TotalBalance() {
             fontSize = 16.sp
         )
         Text(
-            text = "Total Balance",
+            text = "Remaining",
             color = Color.White,
             fontSize = 40.sp,
             fontWeight = FontWeight.ExtraBold

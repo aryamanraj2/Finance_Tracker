@@ -12,7 +12,11 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.*
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.content.pm.PackageManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Tasks
 import com.nsutrack.financetracker.ui.screens.auth.AuthScreen
@@ -46,6 +50,32 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = this
             var currentScreen by remember { mutableStateOf<Screen>(Screen.Intro) }
+
+            val requestPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+            } else {
+                Toast.makeText(this, "SMS permission denied. Transaction features will be unavailable.", Toast.LENGTH_LONG).show()
+            }
+        }
+
+            SideEffect {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_SMS
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        // You can use the API that requires the permission.
+                    }
+                    else -> {
+                        // You can directly ask for the permission.
+                        requestPermissionLauncher.launch(Manifest.permission.READ_SMS)
+                    }
+                }
+            }
 
             val launcher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.StartActivityForResult()

@@ -28,16 +28,16 @@ import com.nsutrack.financetracker.ui.utils.formatCurrency
 
 data class Operation(
     val name: String,
-    val description: String,
+    val category: String,
     val amount: Double,
     val time: String
 )
 
 @Composable
 fun OperationsList(operations: List<Operation>, operationColors: Map<Operation?, Color>) {
-    val totalSpent = operations.sumOf { it.amount }
+    val totalSpent = operations.filter { it.amount < 0 }.sumOf { it.amount }
 
-    val segments = operations.map {
+    val segments = operations.filter { it.amount < 0 }.map {
         (it.amount / totalSpent).toFloat() to (operationColors[it] ?: Color(0xFF656565))
     }
 
@@ -74,7 +74,7 @@ fun OperationsList(operations: List<Operation>, operationColors: Map<Operation?,
             )
             Spacer(modifier = Modifier.height(16.dp))
             operations.forEach { operation ->
-                OperationItem(operation = operation, color = operationColors[operation] ?: Color(0xFF656565))
+                OperationItem(operation = operation, color = if (operation.amount > 0) Color.Green else Color.White)
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -104,7 +104,7 @@ fun OperationItem(operation: Operation, color: Color) {
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(operation.name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(operation.description, color = Color.Gray)
+                Text(operation.category, color = Color.Gray)
             }
         }
         Column(horizontalAlignment = Alignment.End) {

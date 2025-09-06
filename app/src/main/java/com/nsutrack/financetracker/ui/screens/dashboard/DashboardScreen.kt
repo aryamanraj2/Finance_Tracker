@@ -7,6 +7,9 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
@@ -26,14 +29,18 @@ import com.nsutrack.financetracker.ui.components.SubscriptionCard
 import com.nsutrack.financetracker.ui.utils.formatCurrency
 
 @Composable
-fun DashboardScreen() {
-    val operations = listOf(
-        Operation("Kavyansh", "Transfer", -320.00, "5.28 AM"),
-        Operation("Zara", "Shirt", -2320.00, "3.15 PM"),
-        Operation("Netflix", "Subscription", -15.00, "8.30 AM"),
-        Operation("Amazon", "Shopping", -120.00, "1.00 PM"),
-        Operation("Starbucks", "Coffee", -5.00, "9.00 AM")
-    )
+fun DashboardScreen(viewModel: TransactionViewModel = viewModel()) {
+    val transactions by viewModel.todaysTransactions.collectAsState()
+    val dailySummary by viewModel.dailySummary.collectAsState()
+
+    val operations = transactions.map {
+        Operation(
+            name = it.upiId ?: "Unknown",
+            category = it.type,
+            amount = it.amount,
+            time = it.date.toLocalTime().toString()
+        )
+    }
     val top3Operations = operations.sortedBy { it.amount }.take(3)
     val operationColors = mapOf(
         top3Operations.getOrNull(0) to Color(0xFFE5DD00),
@@ -50,10 +57,12 @@ fun DashboardScreen() {
                 Column {
                     TopAppBar()
                     Spacer(modifier = Modifier.height(24.dp))
-                    TotalBalance()
+                    TotalBalance(dailySummary)
                     Spacer(modifier = Modifier.height(24.dp))
                     CardsSection()
                     Spacer(modifier = Modifier.height(24.dp))
+//                    DailySummaryCard(dailySummary)
+//                    Spacer(modifier = Modifier.height(24.dp))
                     OperationsList(operations = operations, operationColors = operationColors)
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(
@@ -98,7 +107,7 @@ fun TopAppBar() {
 }
 
 @Composable
-fun TotalBalance() {
+fun TotalBalance(dailySummary: DailySummary) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,7 +128,7 @@ fun TotalBalance() {
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)) {
-                    append(formatCurrency(18360.22))
+                    append(formatCurrency(dailySummary.netBalance))
                 }
                 append(" ")
                 withStyle(style = SpanStyle(color = Color.Gray, fontSize = 32.sp, fontWeight = FontWeight.Normal)) {
@@ -164,3 +173,33 @@ fun CardsSection() {
 fun DashboardScreenPreview() {
     DashboardScreen()
 }
+
+//@Composable
+//fun DailySummaryCard(dailySummary: DailySummary) {
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 16.dp),
+//        colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E))
+//    ) {
+//        Column(
+//            modifier = Modifier.padding(16.dp)
+//        ) {
+//            Text(text = "Today's Summary", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Column {
+//                    Text(text = "Credited", color = Color.Gray)
+//                    Text(text = formatCurrency(dailySummary.totalCredit), color = Color.Green, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+//                }
+//                Column(horizontalAlignment = Alignment.End) {
+//                    Text(text = "Debited", color = Color.Gray)
+//                    Text(text = formatCurrency(dailySummary.totalDebit), color = Color.Red, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+//                }
+//            }
+//        }
+//    }
+//}

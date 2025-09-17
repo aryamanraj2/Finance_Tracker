@@ -7,7 +7,8 @@ data class ChatMessage(
     val content: String,
     val role: MessageRole,
     val timestamp: LocalDateTime = LocalDateTime.now(),
-    val isTyping: Boolean = false
+    val isTyping: Boolean = false,
+    val shouldAnimate: Boolean = true // Controls whether this message should show animations
 )
 
 enum class MessageRole {

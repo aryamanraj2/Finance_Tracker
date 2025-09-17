@@ -59,9 +59,24 @@ class ChatViewModel : ViewModel() {
                 messages = listOf(
                     ChatMessage(
                         content = welcomeMessage,
-                        role = MessageRole.ASSISTANT
+                        role = MessageRole.ASSISTANT,
+                        shouldAnimate = false // Welcome message should not animate
                     )
                 )
+            )
+        }
+    }
+
+    fun onChatResumed() {
+        // When the screen is resumed, reset the typing state if we are not currently loading a message.
+        // Also disable animations for all existing messages to prevent re-animation on resume
+        if (!_chatState.value.isLoading) {
+            val messagesWithoutAnimation = _chatState.value.messages.map { message ->
+                message.copy(shouldAnimate = false)
+            }
+            _chatState.value = _chatState.value.copy(
+                isTyping = false,
+                messages = messagesWithoutAnimation
             )
         }
     }
@@ -162,5 +177,13 @@ class ChatViewModel : ViewModel() {
     
     fun clearError() {
         _chatState.value = _chatState.value.copy(error = null)
+    }
+    
+    fun onScroll() {
+        // Disable animations for all messages when user scrolls
+        val messagesWithoutAnimation = _chatState.value.messages.map { message ->
+            message.copy(shouldAnimate = false)
+        }
+        _chatState.value = _chatState.value.copy(messages = messagesWithoutAnimation)
     }
 }

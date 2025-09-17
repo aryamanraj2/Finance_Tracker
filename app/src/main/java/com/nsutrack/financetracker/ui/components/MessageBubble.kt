@@ -26,24 +26,30 @@ fun MessageBubble(
     message: ChatMessage,
     modifier: Modifier = Modifier
 ) {
-    var isVisible by remember(message.id) { mutableStateOf(false) }
+    var isVisible by remember(message.id) { mutableStateOf(!message.shouldAnimate) }
     
-    LaunchedEffect(message.id) {
-        if (!isVisible) {
+    LaunchedEffect(message.id, message.shouldAnimate) {
+        if (message.shouldAnimate && !isVisible) {
             delay(100)
+            isVisible = true
+        } else if (!message.shouldAnimate) {
             isVisible = true
         }
     }
     
     AnimatedVisibility(
         visible = isVisible,
-        enter = slideInHorizontally(
-            initialOffsetX = { if (message.role == MessageRole.USER) it else -it },
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            )
-        ) + fadeIn(animationSpec = tween(300)),
+        enter = if (message.shouldAnimate) {
+            slideInHorizontally(
+                initialOffsetX = { if (message.role == MessageRole.USER) it else -it },
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            ) + fadeIn(animationSpec = tween(300))
+        } else {
+            fadeIn(animationSpec = tween(0)) // Instant appearance for existing messages
+        },
         modifier = modifier
     ) {
         Row(
@@ -147,6 +153,7 @@ private fun AssistantMessageBubble(message: ChatMessage) {
                     color = Color.White,
                     fontSize = 16.sp,
                     lineHeight = 22.sp,
+                    shouldAnimate = message.shouldAnimate,
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -198,13 +205,14 @@ fun TypewriterText(
     color: Color = Color.White,
     fontSize: androidx.compose.ui.unit.TextUnit = 16.sp,
     lineHeight: androidx.compose.ui.unit.TextUnit = 22.sp,
+    shouldAnimate: Boolean = true,
     typingSpeed: Long = 30L
 ) {
-    var displayedText by remember(text) { mutableStateOf("") }
-    var hasAnimated by remember(text) { mutableStateOf(false) }
+    var displayedText by remember(text) { mutableStateOf(if (shouldAnimate) "" else text) }
+    var hasAnimated by remember(text) { mutableStateOf(!shouldAnimate) }
     
-    LaunchedEffect(text) {
-        if (!hasAnimated) {
+    LaunchedEffect(text, shouldAnimate) {
+        if (shouldAnimate && !hasAnimated) {
             displayedText = ""
             text.forEachIndexed { index, _ ->
                 displayedText = text.substring(0, index + 1)
@@ -212,7 +220,7 @@ fun TypewriterText(
             }
             hasAnimated = true
         } else {
-            // If already animated, show full text immediately
+            // If should not animate or already animated, show full text immediately
             displayedText = text
         }
     }

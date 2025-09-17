@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.nsutrack.financetracker.data.SmsDataSource
+import com.nsutrack.financetracker.data.SubscriptionManager
 import com.nsutrack.financetracker.data.Transaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,7 @@ import java.time.temporal.TemporalAdjusters
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
     private val smsDataSource = SmsDataSource(application)
+    private val subscriptionManager = SubscriptionManager(application)
 
     private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
     val transactions: StateFlow<List<Transaction>> = _transactions
@@ -53,7 +55,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             val currentWeekTransactions = allTransactions.filter {
                 !it.date.toLocalDate().isBefore(startOfCurrentWeek) && !it.date.toLocalDate().isAfter(endOfCurrentWeek) && it.type == "debit"
             }
-            val currentWeekTotal = currentWeekTransactions.sumOf { it.amount }
+            val currentWeekTotal = currentWeekTransactions.sumOf { it.amount } + subscriptionManager.getTotalWeeklyAmount()
  
             // Calculate previous week's spending
             val startOfPreviousWeek = startOfCurrentWeek.minusWeeks(1)
@@ -61,7 +63,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             val previousWeekTransactions = allTransactions.filter {
                 !it.date.toLocalDate().isBefore(startOfPreviousWeek) && !it.date.toLocalDate().isAfter(endOfPreviousWeek) && it.type == "debit"
             }
-            val previousWeekTotal = previousWeekTransactions.sumOf { it.amount }
+            val previousWeekTotal = previousWeekTransactions.sumOf { it.amount } + subscriptionManager.getTotalWeeklyAmount()
  
             // Calculate percentage change
             val percentageChange = if (previousWeekTotal > 0) {

@@ -34,6 +34,8 @@ import com.nsutrack.financetracker.ui.screens.intro.IntroScreen
 import com.nsutrack.financetracker.ui.screens.chat.ChatScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingIntroScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
+import com.nsutrack.financetracker.ui.screens.subscription.SubscriptionScreen
+import com.nsutrack.financetracker.ui.screens.settings.SettingsScreen
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
 import com.nsutrack.financetracker.ui.utils.GoogleAuthUiClient
 import com.nsutrack.financetracker.ui.utils.OnboardingManager
@@ -47,6 +49,8 @@ sealed class Screen {
     object Dashboard : Screen()
     object WeeklySpendingDetails : Screen()
     object Chat : Screen()
+    object Subscription : Screen()
+    object Settings : Screen()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -143,6 +147,12 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToChat = {
                                     currentScreen = Screen.Chat
+                                },
+                                onNavigateToSubscription = {
+                                    currentScreen = Screen.Subscription
+                                },
+                                onNavigateToSettings = {
+                                    currentScreen = Screen.Settings
                                 }
                             )
                         }
@@ -158,6 +168,20 @@ class MainActivity : ComponentActivity() {
                         is Screen.Chat -> {
                             ChatScreen(
                                 onBackClick = {
+                                    currentScreen = Screen.Dashboard
+                                }
+                            )
+                        }
+                        is Screen.Subscription -> {
+                            SubscriptionScreen(
+                                onNavigateBack = {
+                                    currentScreen = Screen.Dashboard
+                                }
+                            )
+                        }
+                        is Screen.Settings -> {
+                            SettingsScreen(
+                                onNavigateBack = {
                                     currentScreen = Screen.Dashboard
                                 }
                             )

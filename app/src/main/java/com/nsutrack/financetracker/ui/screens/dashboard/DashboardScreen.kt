@@ -33,7 +33,9 @@ import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingSummary
 fun DashboardScreen(
     viewModel: TransactionViewModel,
     onNavigateToWeeklySpendingDetails: () -> Unit,
-    onNavigateToChat: () -> Unit = {}
+    onNavigateToChat: () -> Unit = {},
+    onNavigateToSubscription: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {}
 ) {
     val transactions by viewModel.todaysTransactions.collectAsState()
     val dailySummary by viewModel.dailySummary.collectAsState()
@@ -61,14 +63,15 @@ fun DashboardScreen(
         IosInspiredHeader {
             item {
                 Column {
-                    TopAppBar()
+                    TopAppBar(onNavigateToSettings = onNavigateToSettings)
                     Spacer(modifier = Modifier.height(24.dp))
                     TotalBalance(dailySummary)
                     Spacer(modifier = Modifier.height(24.dp))
                     CardsSection(
                         weeklySummary = weeklySummary,
                         onNavigateToWeeklySpendingDetails = onNavigateToWeeklySpendingDetails,
-                        onNavigateToChat = onNavigateToChat
+                        onNavigateToChat = onNavigateToChat,
+                        onNavigateToSubscription = onNavigateToSubscription
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 //                    DailySummaryCard(dailySummary)
@@ -92,7 +95,7 @@ fun DashboardScreen(
 }
 
 @Composable
-fun TopAppBar() {
+fun TopAppBar(onNavigateToSettings: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,12 +110,14 @@ fun TopAppBar() {
             modifier = Modifier.size(40.dp),
             tint = Color.White
         )
-        Icon(
-            imageVector = Icons.Rounded.Settings,
-            contentDescription = "Settings",
-            modifier = Modifier.size(40.dp),
-            tint = Color.White
-        )
+        IconButton(onClick = onNavigateToSettings) {
+            Icon(
+                imageVector = Icons.Rounded.Settings,
+                contentDescription = "Settings",
+                modifier = Modifier.size(40.dp),
+                tint = Color.White
+            )
+        }
     }
 }
 
@@ -153,7 +158,8 @@ fun TotalBalance(dailySummary: DailySummary) {
 fun CardsSection(
     weeklySummary: WeeklySpendingSummary,
     onNavigateToWeeklySpendingDetails: () -> Unit,
-    onNavigateToChat: () -> Unit = {}
+    onNavigateToChat: () -> Unit = {},
+    onNavigateToSubscription: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -175,7 +181,8 @@ fun CardsSection(
             SubscriptionCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .weight(1f),
+                onClick = onNavigateToSubscription
             )
             GetInsightsButton(
                 onClick = onNavigateToChat,

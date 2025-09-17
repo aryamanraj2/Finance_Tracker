@@ -27,11 +27,16 @@ import com.nsutrack.financetracker.ui.components.OperationsList
 import com.nsutrack.financetracker.ui.components.SpentThisWeekCard
 import com.nsutrack.financetracker.ui.components.SubscriptionCard
 import com.nsutrack.financetracker.ui.utils.formatCurrency
+import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingSummary
 
 @Composable
-fun DashboardScreen(viewModel: TransactionViewModel = viewModel()) {
+fun DashboardScreen(
+    viewModel: TransactionViewModel,
+    onNavigateToWeeklySpendingDetails: () -> Unit
+) {
     val transactions by viewModel.todaysTransactions.collectAsState()
     val dailySummary by viewModel.dailySummary.collectAsState()
+    val weeklySummary by viewModel.weeklySpendingSummary.collectAsState()
 
     val operations = transactions.map {
         Operation(
@@ -59,7 +64,10 @@ fun DashboardScreen(viewModel: TransactionViewModel = viewModel()) {
                     Spacer(modifier = Modifier.height(24.dp))
                     TotalBalance(dailySummary)
                     Spacer(modifier = Modifier.height(24.dp))
-                    CardsSection()
+                    CardsSection(
+                        weeklySummary = weeklySummary,
+                        onNavigateToWeeklySpendingDetails = onNavigateToWeeklySpendingDetails
+                    )
                     Spacer(modifier = Modifier.height(24.dp))
 //                    DailySummaryCard(dailySummary)
 //                    Spacer(modifier = Modifier.height(24.dp))
@@ -140,7 +148,10 @@ fun TotalBalance(dailySummary: DailySummary) {
 }
 
 @Composable
-fun CardsSection() {
+fun CardsSection(
+    weeklySummary: WeeklySpendingSummary,
+    onNavigateToWeeklySpendingDetails: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,7 +160,10 @@ fun CardsSection() {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            SpentThisWeekCard()
+            SpentThisWeekCard(
+                weeklySpendingSummary = weeklySummary,
+                onClick = onNavigateToWeeklySpendingDetails
+            )
         }
         Column(
             modifier = Modifier.weight(1f),
@@ -171,7 +185,10 @@ fun CardsSection() {
 @Preview(showBackground = true)
 @Composable
 fun DashboardScreenPreview() {
-    DashboardScreen()
+    DashboardScreen(
+        viewModel = viewModel(),
+        onNavigateToWeeklySpendingDetails = {}
+    )
 }
 
 //@Composable

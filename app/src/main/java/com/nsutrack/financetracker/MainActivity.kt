@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.nsutrack.financetracker
 
 import android.content.Context
@@ -17,10 +19,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Tasks
 import com.nsutrack.financetracker.ui.screens.auth.AuthScreen
 import com.nsutrack.financetracker.ui.screens.dashboard.DashboardScreen
+import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingDetailsScreen
 import com.nsutrack.financetracker.ui.screens.intro.IntroScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingIntroScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
@@ -35,6 +44,7 @@ sealed class Screen {
     object Auth : Screen()
     object Onboarding : Screen()
     object Dashboard : Screen()
+    object WeeklySpendingDetails : Screen()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -122,7 +132,24 @@ class MainActivity : ComponentActivity() {
                             onSkip = { currentScreen = Screen.Onboarding }
                         )
                         is Screen.Onboarding -> OnboardingScreen { currentScreen = Screen.Dashboard }
-                        is Screen.Dashboard -> DashboardScreen()
+                        is Screen.Dashboard -> {
+                            val viewModel: com.nsutrack.financetracker.ui.screens.dashboard.TransactionViewModel = viewModel()
+                            DashboardScreen(
+                                viewModel = viewModel,
+                                onNavigateToWeeklySpendingDetails = {
+                                    currentScreen = Screen.WeeklySpendingDetails
+                                }
+                            )
+                        }
+                        is Screen.WeeklySpendingDetails -> {
+                            val viewModel: com.nsutrack.financetracker.ui.screens.dashboard.TransactionViewModel = viewModel()
+                            WeeklySpendingDetailsScreen(
+                                viewModel = viewModel,
+                                onNavigateBack = {
+                                    currentScreen = Screen.Dashboard
+                                }
+                            )
+                        }
                     }
                 }
             }

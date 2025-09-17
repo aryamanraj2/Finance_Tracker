@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,13 +30,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingSummary
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
 import com.nsutrack.financetracker.ui.theme.outfit
+import com.nsutrack.financetracker.ui.utils.formatCurrency
 
 @Composable
-fun SpentThisWeekCard() {
+fun SpentThisWeekCard(
+    weeklySpendingSummary: WeeklySpendingSummary,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .clickable { onClick() },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE5FF7F)),
     ) {
@@ -55,7 +64,7 @@ fun SpentThisWeekCard() {
                     fontSize = 14.sp
                 )
                 Text(
-                    text = "₹6,426.94",
+                    text = formatCurrency(weeklySpendingSummary.currentWeekTotal),
                     fontSize = 32.sp,
                     fontFamily = outfit,
                     fontWeight = FontWeight.Bold,
@@ -63,15 +72,23 @@ fun SpentThisWeekCard() {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    val percentageChange = weeklySpendingSummary.percentageChange
+                    val isIncrease = percentageChange >= 0
+                    val arrowIcon = if (isIncrease) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward
+                    val changeText = String.format("%.0f%% %s",
+                        if(isIncrease) percentageChange else -percentageChange,
+                        if(isIncrease) "higher" else "lower"
+                    )
+
                     Icon(
-                        imageVector = Icons.Filled.ArrowUpward,
-                        contentDescription = "Higher",
+                        imageVector = arrowIcon,
+                        contentDescription = if (isIncrease) "Higher" else "Lower",
                         tint = Color.Black.copy(alpha = 0.7f),
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "3% higher",
+                        text = changeText,
                         color = Color.Black.copy(alpha = 0.7f),
                         fontFamily = outfit,
                         fontWeight = FontWeight.Medium,
@@ -97,6 +114,13 @@ fun SpentThisWeekCard() {
 @Composable
 fun SpentThisWeekCardPreview() {
     FinanceTrackerTheme {
-        SpentThisWeekCard()
+        SpentThisWeekCard(
+            weeklySpendingSummary = WeeklySpendingSummary(
+                currentWeekTotal = 6426.94,
+                previousWeekTotal = 6239.75,
+                percentageChange = 3.0
+            ),
+            onClick = {}
+        )
     }
 }

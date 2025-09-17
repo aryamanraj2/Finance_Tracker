@@ -36,7 +36,7 @@ class SmsDataSource(private val context: Context) {
     }
 
     private fun parseSms(message: String, date: Long): Transaction? {
-        val keywords = listOf("credited", "debited", "upi", "txn", "vpa", "rs", "received", "paid")
+        val keywords = listOf("credited", "debited", "upi", "txn", "vpa", "rs", "received", "paid", "sent")
         if (keywords.none { message.contains(it, ignoreCase = true) }) {
             return null
         }
@@ -51,9 +51,16 @@ class SmsDataSource(private val context: Context) {
             else -> return null // Unrecognized UPI SMS
         }
 
-        val upiIdRegex = Regex("""[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}""")
-        val upiIdMatch = upiIdRegex.find(message)
-        val upiId = upiIdMatch?.value
+        val upiId: String?
+        if (message.startsWith("Sent", ignoreCase = true) && message.contains("To", ignoreCase = true)) {
+            val toRegex = Regex("""To\s+(.+)""")
+            val toMatch = toRegex.find(message)
+            upiId = toMatch?.destructured?.component1()?.lines()?.first()?.trim()
+        } else {
+            val upiIdRegex = Regex("""[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}""")
+            val upiIdMatch = upiIdRegex.find(message)
+            upiId = upiIdMatch?.value
+        }
 
         val transactionDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
 

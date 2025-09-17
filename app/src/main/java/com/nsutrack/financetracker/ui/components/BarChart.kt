@@ -79,8 +79,8 @@ fun BarChart(
                                 Text(
                                     text = "₹${amount.toInt()}",
                                     color = Color.White,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -119,9 +119,9 @@ fun BarChart(
                 ) {
                     Text(
                         text = getDayAbbreviation(day),
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -137,9 +137,9 @@ fun BarChart(
             ) {
                 Text(
                     text = "Peak: ${formatCurrency(maxValue)}",
-                    color = Color.White.copy(alpha = 0.6f),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
@@ -172,14 +172,22 @@ private fun DrawScope.drawBarChart(
         val y = size.height - animatedBarHeight
         
         if (animatedBarHeight > 0) {
-            // Create gradient colors for better visibility on dark background
-            val primaryColor = Color.White
-            val secondaryColor = Color(0xFFB0B0B0)
+            // Create bars with the theme color for better visibility
+            val primaryColor = Color(0xFFE5FF7F) // Main theme color
+            val accentColor = Color(0xFFD4F06B) // Slightly darker variant
             
             val gradient = Brush.verticalGradient(
-                colors = listOf(primaryColor, secondaryColor),
+                colors = listOf(primaryColor, accentColor),
                 startY = y,
                 endY = y + animatedBarHeight
+            )
+            
+            // Draw shadow first for depth
+            drawRoundRect(
+                color = Color.Black.copy(alpha = 0.15f),
+                topLeft = Offset(x + 2.dp.toPx(), y + 2.dp.toPx()),
+                size = Size(barWidth, animatedBarHeight),
+                cornerRadius = CornerRadius(12.dp.toPx())
             )
             
             // Draw main bar with gradient
@@ -187,31 +195,23 @@ private fun DrawScope.drawBarChart(
                 brush = gradient,
                 topLeft = Offset(x, y),
                 size = Size(barWidth, animatedBarHeight),
-                cornerRadius = CornerRadius(8.dp.toPx())
+                cornerRadius = CornerRadius(12.dp.toPx())
             )
             
-            // Draw highlight on top of bar
+            // Draw subtle highlight on top edge for modern look
             drawRoundRect(
-                color = Color.White.copy(alpha = 0.8f),
+                color = Color.White.copy(alpha = 0.3f),
                 topLeft = Offset(x, y),
-                size = Size(barWidth, 4.dp.toPx()),
-                cornerRadius = CornerRadius(8.dp.toPx())
-            )
-            
-            // Add subtle shadow effect
-            drawRoundRect(
-                color = Color.Black.copy(alpha = 0.2f),
-                topLeft = Offset(x + 1.dp.toPx(), y + 1.dp.toPx()),
-                size = Size(barWidth, animatedBarHeight),
-                cornerRadius = CornerRadius(8.dp.toPx())
+                size = Size(barWidth, 6.dp.toPx()),
+                cornerRadius = CornerRadius(12.dp.toPx())
             )
         } else {
             // Draw placeholder for days with no spending
             drawRoundRect(
-                color = Color.White.copy(alpha = 0.1f),
-                topLeft = Offset(x, size.height - 8.dp.toPx()),
-                size = Size(barWidth, 8.dp.toPx()),
-                cornerRadius = CornerRadius(4.dp.toPx())
+                color = Color.White.copy(alpha = 0.15f),
+                topLeft = Offset(x, size.height - 10.dp.toPx()),
+                size = Size(barWidth, 10.dp.toPx()),
+                cornerRadius = CornerRadius(8.dp.toPx())
             )
         }
     }

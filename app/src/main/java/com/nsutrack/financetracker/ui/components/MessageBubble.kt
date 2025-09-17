@@ -26,11 +26,13 @@ fun MessageBubble(
     message: ChatMessage,
     modifier: Modifier = Modifier
 ) {
-    var isVisible by remember { mutableStateOf(false) }
+    var isVisible by remember(message.id) { mutableStateOf(false) }
     
     LaunchedEffect(message.id) {
-        delay(100)
-        isVisible = true
+        if (!isVisible) {
+            delay(100)
+            isVisible = true
+        }
     }
     
     AnimatedVisibility(
@@ -198,13 +200,20 @@ fun TypewriterText(
     lineHeight: androidx.compose.ui.unit.TextUnit = 22.sp,
     typingSpeed: Long = 30L
 ) {
-    var displayedText by remember { mutableStateOf("") }
+    var displayedText by remember(text) { mutableStateOf("") }
+    var hasAnimated by remember(text) { mutableStateOf(false) }
     
     LaunchedEffect(text) {
-        displayedText = ""
-        text.forEachIndexed { index, _ ->
-            displayedText = text.substring(0, index + 1)
-            delay(typingSpeed)
+        if (!hasAnimated) {
+            displayedText = ""
+            text.forEachIndexed { index, _ ->
+                displayedText = text.substring(0, index + 1)
+                delay(typingSpeed)
+            }
+            hasAnimated = true
+        } else {
+            // If already animated, show full text immediately
+            displayedText = text
         }
     }
     

@@ -63,12 +63,10 @@ fun ChatInputField(
     )
     
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(24.dp),
         color = Color(0xFF2C2C2E),
-        shadowElevation = 8.dp
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier

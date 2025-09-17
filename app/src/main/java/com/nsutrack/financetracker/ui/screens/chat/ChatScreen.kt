@@ -16,6 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +58,22 @@ fun ChatScreen(
     LaunchedEffect(chatState.messages.size) {
         if (chatState.messages.isNotEmpty()) {
             scope.launch {
-                listState.animateScrollToItem(chatState.messages.size - 1)
+                listState.animateScrollToItem(
+                    index = chatState.messages.size - 1,
+                    scrollOffset = 0
+                )
+            }
+        }
+    }
+    
+    // Auto-scroll when keyboard appears/disappears
+    LaunchedEffect(inputText) {
+        if (chatState.messages.isNotEmpty() && inputText.isNotEmpty()) {
+            scope.launch {
+                listState.animateScrollToItem(
+                    index = chatState.messages.size - 1,
+                    scrollOffset = 0
+                )
             }
         }
     }
@@ -60,24 +82,34 @@ fun ChatScreen(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1C1C1E)
     ) {
-        Column(
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Header
-            ChatHeader(
-                onBackClick = onBackClick,
-                isTyping = chatState.isTyping
-            )
-            
-            // Chat Messages
-            LazyColumn(
-                state = listState,
+            // Main chat content (adjusts to keyboard)
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+                    .imePadding()
             ) {
+                // Header
+                ChatHeader(
+                    onBackClick = onBackClick,
+                    isTyping = chatState.isTyping
+                )
+                
+                // Chat Messages
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(
+                        top = 16.dp,
+                        bottom = 16.dp // Reduced padding since input is separate
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                 items(
                     items = chatState.messages,
                     key = { it.id }
@@ -149,25 +181,32 @@ fun ChatScreen(
                     }
                 }
                 
-                // Add some space at the bottom
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
             
-            // Input Field
-            ChatInputField(
-                value = inputText,
-                onValueChange = { inputText = it },
-                onSendClick = {
-                    if (inputText.isNotBlank()) {
-                        viewModel.sendMessage(inputText.trim(), context)
-                        inputText = ""
-                    }
-                },
-                isLoading = chatState.isLoading,
-                modifier = Modifier.imePadding()
-            )
+            // Input Field (fixed at bottom)
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),
+                color = Color(0xFF1C1C1E),
+                shadowElevation = 8.dp
+            ) {
+                ChatInputField(
+                    value = inputText,
+                    onValueChange = { inputText = it },
+                    onSendClick = {
+                        if (inputText.isNotBlank()) {
+                            viewModel.sendMessage(inputText.trim(), context)
+                            inputText = ""
+                        }
+                    },
+                    isLoading = chatState.isLoading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
         }
     }
 }

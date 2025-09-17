@@ -34,6 +34,24 @@ import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingSummary
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
 import com.nsutrack.financetracker.ui.theme.outfit
 import com.nsutrack.financetracker.ui.utils.formatCurrency
+import kotlin.math.max
+
+/**
+ * Calculate dynamic font size based on text length to prevent overflow
+ * Starts with base font size and reduces as text gets longer
+ */
+private fun calculateDynamicFontSize(text: String, baseFontSize: Float): Float {
+    val baseLength = 8 // Base length for normal font size (e.g., "₹1,234")
+    val textLength = text.length
+    
+    return when {
+        textLength <= baseLength -> baseFontSize
+        textLength <= baseLength + 2 -> baseFontSize * 0.9f // Slight reduction
+        textLength <= baseLength + 4 -> baseFontSize * 0.8f // More reduction
+        textLength <= baseLength + 6 -> baseFontSize * 0.7f // Significant reduction
+        else -> max(baseFontSize * 0.6f, 18f) // Minimum readable size
+    }
+}
 
 @Composable
 fun SpentThisWeekCard(
@@ -63,12 +81,17 @@ fun SpentThisWeekCard(
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp
                 )
+                val currencyText = formatCurrency(weeklySpendingSummary.currentWeekTotal)
+                val dynamicFontSize = calculateDynamicFontSize(currencyText, 32f)
+                
                 Text(
-                    text = formatCurrency(weeklySpendingSummary.currentWeekTotal),
-                    fontSize = 32.sp,
+                    text = currencyText,
+                    fontSize = dynamicFontSize.sp,
                     fontFamily = outfit,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 1, // Ensure single line display
+                    modifier = Modifier.fillMaxWidth() // Use available width
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -114,13 +137,40 @@ fun SpentThisWeekCard(
 @Composable
 fun SpentThisWeekCardPreview() {
     FinanceTrackerTheme {
-        SpentThisWeekCard(
-            weeklySpendingSummary = WeeklySpendingSummary(
-                currentWeekTotal = 6426.94,
-                previousWeekTotal = 6239.75,
-                percentageChange = 3.0
-            ),
-            onClick = {}
-        )
+        Column {
+            // Test with normal amount
+            SpentThisWeekCard(
+                weeklySpendingSummary = WeeklySpendingSummary(
+                    currentWeekTotal = 6426.94,
+                    previousWeekTotal = 6239.75,
+                    percentageChange = 3.0
+                ),
+                onClick = {}
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Test with large amount (should trigger font size reduction)
+            SpentThisWeekCard(
+                weeklySpendingSummary = WeeklySpendingSummary(
+                    currentWeekTotal = 1234567.89,
+                    previousWeekTotal = 1000000.0,
+                    percentageChange = 23.5
+                ),
+                onClick = {}
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Test with very large amount (should trigger minimum font size)
+            SpentThisWeekCard(
+                weeklySpendingSummary = WeeklySpendingSummary(
+                    currentWeekTotal = 99999999.99,
+                    previousWeekTotal = 50000000.0,
+                    percentageChange = 100.0
+                ),
+                onClick = {}
+            )
+        }
     }
 }

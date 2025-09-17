@@ -31,6 +31,7 @@ import com.nsutrack.financetracker.ui.screens.auth.AuthScreen
 import com.nsutrack.financetracker.ui.screens.dashboard.DashboardScreen
 import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingDetailsScreen
 import com.nsutrack.financetracker.ui.screens.intro.IntroScreen
+import com.nsutrack.financetracker.ui.screens.chat.ChatScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingIntroScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
@@ -45,6 +46,7 @@ sealed class Screen {
     object Onboarding : Screen()
     object Dashboard : Screen()
     object WeeklySpendingDetails : Screen()
+    object Chat : Screen()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -138,6 +140,9 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 onNavigateToWeeklySpendingDetails = {
                                     currentScreen = Screen.WeeklySpendingDetails
+                                },
+                                onNavigateToChat = {
+                                    currentScreen = Screen.Chat
                                 }
                             )
                         }
@@ -146,6 +151,13 @@ class MainActivity : ComponentActivity() {
                             WeeklySpendingDetailsScreen(
                                 viewModel = viewModel,
                                 onNavigateBack = {
+                                    currentScreen = Screen.Dashboard
+                                }
+                            )
+                        }
+                        is Screen.Chat -> {
+                            ChatScreen(
+                                onBackClick = {
                                     currentScreen = Screen.Dashboard
                                 }
                             )

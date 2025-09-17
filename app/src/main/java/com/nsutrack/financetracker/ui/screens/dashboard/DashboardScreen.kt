@@ -32,7 +32,8 @@ import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingSummary
 @Composable
 fun DashboardScreen(
     viewModel: TransactionViewModel,
-    onNavigateToWeeklySpendingDetails: () -> Unit
+    onNavigateToWeeklySpendingDetails: () -> Unit,
+    onNavigateToChat: () -> Unit = {}
 ) {
     val transactions by viewModel.todaysTransactions.collectAsState()
     val dailySummary by viewModel.dailySummary.collectAsState()
@@ -66,7 +67,8 @@ fun DashboardScreen(
                     Spacer(modifier = Modifier.height(24.dp))
                     CardsSection(
                         weeklySummary = weeklySummary,
-                        onNavigateToWeeklySpendingDetails = onNavigateToWeeklySpendingDetails
+                        onNavigateToWeeklySpendingDetails = onNavigateToWeeklySpendingDetails,
+                        onNavigateToChat = onNavigateToChat
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 //                    DailySummaryCard(dailySummary)
@@ -150,7 +152,8 @@ fun TotalBalance(dailySummary: DailySummary) {
 @Composable
 fun CardsSection(
     weeklySummary: WeeklySpendingSummary,
-    onNavigateToWeeklySpendingDetails: () -> Unit
+    onNavigateToWeeklySpendingDetails: () -> Unit,
+    onNavigateToChat: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -175,7 +178,7 @@ fun CardsSection(
                     .weight(1f)
             )
             GetInsightsButton(
-                onClick = {},
+                onClick = onNavigateToChat,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -187,7 +190,8 @@ fun CardsSection(
 fun DashboardScreenPreview() {
     DashboardScreen(
         viewModel = viewModel(),
-        onNavigateToWeeklySpendingDetails = {}
+        onNavigateToWeeklySpendingDetails = {},
+        onNavigateToChat = {}
     )
 }
 

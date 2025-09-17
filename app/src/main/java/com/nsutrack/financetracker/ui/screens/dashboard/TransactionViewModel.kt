@@ -33,6 +33,9 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
  
     private val _weeklySpendingSummary = MutableStateFlow(WeeklySpendingSummary())
     val weeklySpendingSummary: StateFlow<WeeklySpendingSummary> = _weeklySpendingSummary
+
+    private val _weeklyGraphData = MutableStateFlow<Map<DayOfWeek, Double>>(emptyMap())
+    val weeklyGraphData: StateFlow<Map<DayOfWeek, Double>> = _weeklyGraphData
  
      init {
          loadTransactions()
@@ -68,20 +71,28 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             }
  
             _weeklySpendingSummary.value = WeeklySpendingSummary(currentWeekTotal, previousWeekTotal, percentageChange)
+            
+            // Generate graph data for the current week (all 7 days)
+            val graphData = mutableMapOf<DayOfWeek, Double>()
+            
+            // Initialize all days of the week with 0.0
+            DayOfWeek.values().forEach { day ->
+                graphData[day] = 0.0
+            }
+            
+            // Populate with actual spending data
+            currentWeekTransactions
+                .groupBy { it.date.toLocalDate().dayOfWeek }
+                .forEach { (dayOfWeek, transactions) ->
+                    graphData[dayOfWeek] = transactions.sumOf { it.amount }
+                }
+            
+            _weeklyGraphData.value = graphData
         }
     }
  
     fun getWeeklySpendingGraphData(): Map<DayOfWeek, Double> {
-        val today = LocalDate.now()
-        val startOfCurrentWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
-        val endOfCurrentWeek = startOfCurrentWeek.plusDays(6)
-        val currentWeekTransactions = _transactions.value.filter {
-            !it.date.toLocalDate().isBefore(startOfCurrentWeek) && !it.date.toLocalDate().isAfter(endOfCurrentWeek) && it.type == "debit"
-        }
- 
-        return currentWeekTransactions
-            .groupBy { it.date.dayOfWeek }
-            .mapValues { entry -> entry.value.sumOf { it.amount } }
+        return _weeklyGraphData.value
     }
      private fun loadTransactions() {
          viewModelScope.launch {

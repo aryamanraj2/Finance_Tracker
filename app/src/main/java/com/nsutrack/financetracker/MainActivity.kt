@@ -27,6 +27,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Tasks
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import com.nsutrack.financetracker.ui.screens.auth.AuthScreen
 import com.nsutrack.financetracker.ui.screens.dashboard.DashboardScreen
 import com.nsutrack.financetracker.ui.screens.dashboard.WeeklySpendingDetailsScreen
@@ -36,6 +38,7 @@ import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingIntroScreen
 import com.nsutrack.financetracker.ui.screens.onboarding.OnboardingScreen
 import com.nsutrack.financetracker.ui.screens.subscription.SubscriptionScreen
 import com.nsutrack.financetracker.ui.screens.settings.SettingsScreen
+import com.nsutrack.financetracker.ui.screens.profile.ProfileScreen
 import com.nsutrack.financetracker.ui.theme.FinanceTrackerTheme
 import com.nsutrack.financetracker.ui.utils.GoogleAuthUiClient
 import com.nsutrack.financetracker.ui.utils.OnboardingManager
@@ -51,6 +54,7 @@ sealed class Screen {
     object Chat : Screen()
     object Subscription : Screen()
     object Settings : Screen()
+    object Profile : Screen()
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -98,15 +102,21 @@ class MainActivity : ComponentActivity() {
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
                     lifecycleScope.launch {
-                        val account = Tasks.await(GoogleSignIn.getSignedInAccountFromIntent(result.data))
-                        if (account != null) {
+                        val signInResult = googleAuthUiClient.signInWithIntent(
+                            intent = result.data ?: return@launch
+                        )
+                        if (signInResult.data != null) {
                             currentScreen = if (OnboardingManager.isOnboardingCompleted(context)) {
                                 Screen.Dashboard
                             } else {
                                 Screen.Onboarding
                             }
+                        } else {
+                            Toast.makeText(context, "Sign in failed: ${signInResult.errorMessage}", Toast.LENGTH_LONG).show()
                         }
                     }
+                } else {
+                    Toast.makeText(context, "Sign in cancelled", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -153,6 +163,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToSettings = {
                                     currentScreen = Screen.Settings
+                                },
+                                onNavigateToProfile = {
+                                    currentScreen = Screen.Profile
                                 }
                             )
                         }
@@ -183,6 +196,20 @@ class MainActivity : ComponentActivity() {
                             SettingsScreen(
                                 onNavigateBack = {
                                     currentScreen = Screen.Dashboard
+                                }
+                            )
+                        }
+                        is Screen.Profile -> {
+                            ProfileScreen(
+                                userData = googleAuthUiClient.getSignedInUser(),
+                                onNavigateBack = {
+                                    currentScreen = Screen.Dashboard
+                                },
+                                onSignOut = {
+                                    lifecycleScope.launch {
+                                        googleAuthUiClient.signOut()
+                                        currentScreen = Screen.Auth
+                                    }
                                 }
                             )
                         }

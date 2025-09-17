@@ -35,7 +35,8 @@ fun DashboardScreen(
     onNavigateToWeeklySpendingDetails: () -> Unit,
     onNavigateToChat: () -> Unit = {},
     onNavigateToSubscription: () -> Unit = {},
-    onNavigateToSettings: () -> Unit = {}
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {}
 ) {
     val transactions by viewModel.todaysTransactions.collectAsState()
     val dailySummary by viewModel.dailySummary.collectAsState()
@@ -63,7 +64,10 @@ fun DashboardScreen(
         IosInspiredHeader {
             item {
                 Column {
-                    TopAppBar(onNavigateToSettings = onNavigateToSettings)
+                    TopAppBar(
+                        onNavigateToSettings = onNavigateToSettings,
+                        onNavigateToProfile = onNavigateToProfile
+                    )
                     Spacer(modifier = Modifier.height(24.dp))
                     TotalBalance(dailySummary)
                     Spacer(modifier = Modifier.height(24.dp))
@@ -95,7 +99,10 @@ fun DashboardScreen(
 }
 
 @Composable
-fun TopAppBar(onNavigateToSettings: () -> Unit = {}) {
+fun TopAppBar(
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,12 +111,14 @@ fun TopAppBar(onNavigateToSettings: () -> Unit = {}) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Rounded.AccountCircle,
-            contentDescription = "Profile",
-            modifier = Modifier.size(40.dp),
-            tint = Color.White
-        )
+        IconButton(onClick = onNavigateToProfile) {
+            Icon(
+                imageVector = Icons.Rounded.AccountCircle,
+                contentDescription = "Profile",
+                modifier = Modifier.size(40.dp),
+                tint = Color.White
+            )
+        }
         IconButton(onClick = onNavigateToSettings) {
             Icon(
                 imageVector = Icons.Rounded.Settings,
